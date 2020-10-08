@@ -9,9 +9,13 @@ var usedPlayerPlaygroundSquers = []
 var canBePlaced = true
 var isGeneratedPlayerPlayground = false
 function changeColorOfSquers(position, color, multiplier){
-    for (i = 0; i<selectedShipSize;i++){
-        playerPlaygroundTable[position+(i*multiplier)].style.backgroundColor=color;
-    }   
+    try {
+        for (i = 0; i<selectedShipSize;i++){
+            playerPlaygroundTable[position+(i*multiplier)].style.backgroundColor=color;
+        }  
+      } catch (TypeError) {
+      }
+     
 }
 function checkCanBePlaced(position, multiplier){
     for(i=0;i <selectedShipSize;i++){
@@ -25,6 +29,11 @@ function checkIsSizeSuitable(position){
         position = (position%100)-(position%10)+10-(selectedShipSize)
     }
     return position
+}
+function changeColorOfShipsToBlack(){
+    shipsOnPlayground.forEach(function(i,j){
+        shipsOnPlayground[j].style.backgroundColor="black"
+    })
 }
 function generatePlayerPlayground(){
     if(isGeneratedPlayerPlayground == false){
@@ -68,38 +77,47 @@ function generatePlayerPlayground(){
                     changeColorOfSquers(position, "antiquewhite", 10)
                 }  
                 }
-                shipsOnPlayground.forEach(function(i,j){
-                    shipsOnPlayground[j].style.backgroundColor="black"
-                })
+                changeColorOfShipsToBlack()
             })
 
             squer.addEventListener("click",function(event) {
                 if(selectedShip!=null){
                     if(canBePlaced){
-                        var position = playerPlaygroundTable.findIndex(e => e==event.target)
-                        position = checkIsSizeSuitable(position)
-                        placeShip(position, selectedShipSize, selectedShipDirection)
-                        for (i = 0; i<selectedShipSize;i++){
-                            if(selectedShipDirection==0){
-                                shipsOnPlayground.push(playerPlaygroundTable[position+i])
-                            }else{
-                                shipsOnPlayground.push(playerPlaygroundTable[position+(i*10)])
+                            var position = playerPlaygroundTable.findIndex(e => e==event.target)
+                        if(selectedShipDirection==0){
+                            position = checkIsSizeSuitable(position)
+                            
+                            placeShip(position, selectedShipSize, selectedShipDirection)
+                            for (i = 0; i<selectedShipSize;i++){
+                                    shipsOnPlayground.push(playerPlaygroundTable[position+i])
                             }
+                        }else{
+                        for (i = 0; i<selectedShipSize;i++){
+                            shipsOnPlayground.push(playerPlaygroundTable[position+(i*10)])
                         }
-                        shipsMenu.removeChild(selectedShip)
-                        selectedShip = null
+                    }
+                        changeColorOfShipsToBlack()
+                    }
+                    shipsMenu.removeChild(selectedShip)
+                    selectedShip = null
                 }
-            }
+            
                 
             }) 
+            //TODO: przy klikaniu na squer bardziej po prawej zeby sie zmienialy na bialo te po lewej tez
             squer.addEventListener("contextmenu",function(event){
                 event.preventDefault()
-                var position = playerPlaygroundTable.findIndex(e => e==event.currentTarget)
+                position =  playerPlaygroundTable.findIndex(e => e==event.target)
                 canBePlaced = true
                 if(selectedShipDirection==0){
                     selectedShipDirection=1
-                    
-                changeColorOfSquers(position, "antiquewhite", 1)
+                if(position%10+selectedShipSize<9){
+                    changeColorOfSquers(position, "antiquewhite", 1)
+                }else{
+                    for(i=0; i<selectedShipSize;i++){
+                        playerPlaygroundTable[(position%100)-(position%10)+9-i].style.backgroundColor="antiquewhite";
+                    }
+                }
                 checkCanBePlaced(position,10)
                 if(canBePlaced){
                     changeColorOfSquers(position, "green", 10)
@@ -109,15 +127,15 @@ function generatePlayerPlayground(){
                 }else{
                     selectedShipDirection=0
                     changeColorOfSquers(position, "antiquewhite", 10)
+                    position = checkIsSizeSuitable(position)
                     checkCanBePlaced(position,1)
                     if(canBePlaced){
                         changeColorOfSquers(position, "green", 1)
                 }else{
                     changeColorOfSquers(position, "red", 1)
                 }
-                    
                 }
-                
+                changeColorOfShipsToBlack()
             })              
         }
         var clearBoth = document.createElement("div")
@@ -153,7 +171,7 @@ function generatePlayerPlayground(){
             selectedShip = this
             //ship.childNodes.style.backgroundColor= "blue";
             })
-        ship.addEventListener("mouseover",function(){
+        ship.addEventListener("mouseenter",function(){
             if(selectedShip!=this){
                 squers = ship.childNodes
                 squers.forEach(function(i,j){
@@ -161,7 +179,7 @@ function generatePlayerPlayground(){
                 })
             }
         })
-        
+
         ship.addEventListener("mouseleave",function(){
             if(selectedShip!=this){
                 squers = ship.childNodes
@@ -185,15 +203,6 @@ function generatePlayerPlayground(){
 //TODO: COS SIE PSUJE Z GENEROWANIE DIRETION 1 PRZY LINII ZEWNETRZNEJ
 function placeShip(position, shipSize, direction){
     var pos = position
-  //  for(i = 0; i<shipSize;i++){
-  //      if(direction == 0){
-  //      playerPlaygroundTable[position+i].style.backgroundColor= "black"
-  //      }else{
-  //          playerPlaygroundTable[position+(i*10)].style.backgroundColor= "black"
-  //      }
-  //  }
-//dopóki nie znajdzie się taki start point ze zmiesci sie shipSize masztowiec
-
 if(direction==0){ //poziom
     //dla pierwszego rzedu
     if(pos%100<10){
