@@ -82,24 +82,32 @@ function generatePlayerPlayground(){
 
             squer.addEventListener("click",function(event) {
                 if(selectedShip!=null){
-                    if(canBePlaced){
-                            var position = playerPlaygroundTable.findIndex(e => e==event.target)
-                        if(selectedShipDirection==0){
+                    var position = playerPlaygroundTable.findIndex(e => e==event.target)
+                    if(selectedShipDirection==0){
+                        checkCanBePlaced(position, 1)
+                        if(canBePlaced){   
                             position = checkIsSizeSuitable(position)
-                            
                             placeShip(position, selectedShipSize, selectedShipDirection)
                             for (i = 0; i<selectedShipSize;i++){
                                     shipsOnPlayground.push(playerPlaygroundTable[position+i])
                             }
-                        }else{
-                        for (i = 0; i<selectedShipSize;i++){
-                            shipsOnPlayground.push(playerPlaygroundTable[position+(i*10)])
-                        }
-                    }
-                        changeColorOfShipsToBlack()
-                    }
-                    shipsMenu.removeChild(selectedShip)
+                            shipsMenu.removeChild(selectedShip)
                     selectedShip = null
+                        }
+                    }else{
+                        checkCanBePlaced(position, 10)
+                        if(canBePlaced){   
+                            
+                            placeShip(position, selectedShipSize, selectedShipDirection)
+                            for (i = 0; i<selectedShipSize;i++){
+                                shipsOnPlayground.push(playerPlaygroundTable[position+(i*10)])
+                            }
+                            shipsMenu.removeChild(selectedShip)
+                    selectedShip = null
+                    }
+                }
+                    changeColorOfShipsToBlack()
+                    
                 }
             
                 
@@ -155,21 +163,29 @@ function generatePlayerPlayground(){
         ship.appendChild(clearBoth)
         
         ship.addEventListener("click",function(){
-            if(selectedShip!=null){
-            
-            selectedSquers = selectedShip.childNodes
-            selectedSquers.forEach(function(i,j){
-                selectedSquers[j].style.backgroundColor="antiquewhite"
-            })   
-        }
-        selectedShipSize = -1
-            squers = ship.childNodes
-            squers.forEach(function(i,j){
-                squers[j].style.backgroundColor="blue"
-                selectedShipSize++
-            })
-            selectedShip = this
+            if(selectedShip == this){
+                selectedSquers = selectedShip.childNodes
+                selectedSquers.forEach(function(i,j){
+                    selectedSquers[j].style.backgroundColor="antiquewhite"
+                })   
+                selectedShip = null
+                selectedShipSize=-1
+            }else{
+                if(selectedShip!=null){
+                    selectedSquers = selectedShip.childNodes
+                    selectedSquers.forEach(function(i,j){
+                        selectedSquers[j].style.backgroundColor="antiquewhite"
+                    })   
+                }
+                selectedShipSize = -1
+                squers = ship.childNodes
+                squers.forEach(function(i,j){
+                    squers[j].style.backgroundColor="blue"
+                    selectedShipSize++
+                })
+                selectedShip = this
             //ship.childNodes.style.backgroundColor= "blue";
+        }
             })
         ship.addEventListener("mouseenter",function(){
             if(selectedShip!=this){
