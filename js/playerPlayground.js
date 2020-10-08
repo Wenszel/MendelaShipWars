@@ -31,8 +31,11 @@ function checkIsSizeSuitable(position){
     return position
 }
 function changeColorOfShipsToBlack(){
-    shipsOnPlayground.forEach(function(i,j){
-        shipsOnPlayground[j].style.backgroundColor="black"
+    shipsOnPlayground.forEach(function(i){
+        i.forEach(function(k){
+            k.style.backgroundColor="black"
+        })
+        
     })
 }
 function generatePlayerPlayground(){
@@ -81,16 +84,19 @@ function generatePlayerPlayground(){
             })
 
             squer.addEventListener("click",function(event) {
+                var position = playerPlaygroundTable.findIndex(e => e==event.target)
                 if(selectedShip!=null){
-                    var position = playerPlaygroundTable.findIndex(e => e==event.target)
+                    
                     if(selectedShipDirection==0){
                         checkCanBePlaced(position, 1)
                         if(canBePlaced){   
                             position = checkIsSizeSuitable(position)
                             placeShip(position, selectedShipSize, selectedShipDirection)
+                            var tablica = []
                             for (i = 0; i<selectedShipSize;i++){
-                                    shipsOnPlayground.push(playerPlaygroundTable[position+i])
+                                tablica.push(playerPlaygroundTable[position+i])
                             }
+                            shipsOnPlayground.push(tablica)
                             shipsMenu.removeChild(selectedShip)
                     selectedShip = null
                         }
@@ -108,8 +114,33 @@ function generatePlayerPlayground(){
                 }
                     changeColorOfShipsToBlack()
                     
-                }
-            
+                }else{
+                    shipsOnPlayground.forEach(function(ship){
+                        if(ship.includes(playerPlaygroundTable[position])){
+                            counter = 0
+                            for(i = 0; i<ship.length;i++){
+                                counter++
+                            }
+                            ship.forEach(function(shipSquer){
+                                shipSquer.style.backgroundColor= "antiquewhite"
+                            })
+                            var newShip = document.createElement("div")
+                            newShip.classList.add("ship")
+                                for(i = 0; i<counter; i++){
+                                    var squer = document.createElement("div")
+                                    squer.classList.add("squer")
+                                    newShip.appendChild(squer)
+                                }
+                            var clearBoth = document.createElement("div")
+                            clearBoth.style.clear = "both"
+                            newShip.appendChild(clearBoth)
+                            shipsTable.push(newShip)
+                            shipsMenu.appendChild(newShip)
+                            shipsOnPlayground.pop(ship)
+                        }
+                                        })
+                                    }
+                                
                 
             }) 
             //TODO: przy klikaniu na squer bardziej po prawej zeby sie zmienialy na bialo te po lewej tez
