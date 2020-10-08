@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pl_PL">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statki-WS</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+    <button onclick="generateComputerPlayground(), generatePlayerPlayground()">Generate Maps!</button>
+    <button>Start Game</button>
+    <div id="shipsMenu"></div>
+    <div id="playerPlayground"></div>
+    <div id="computerPlayground"></div>
+    <script src="js/computerPlayground.js"></script>
+    <script src="js/playerPlayground.js"></script>
+    <script>
+        var sizeY = 10
+        var sizeX = 10
+        var ships = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
+    </script>
+</body>
+</html>
