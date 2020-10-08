@@ -21,57 +21,64 @@ function generatePlayerPlayground(){
                 if(selectedShip!=null){
                     var position = playerPlaygroundTable.findIndex(e => e==event.currentTarget)
                     canBePlaced = true
-                    for(i=0;i <selectedShipSize;i++){
-                        if(usedPlayerPlaygroundSquers.includes(position+i)){
-                            canBePlaced = false
-                        }
-                    }
-                    if(canBePlaced){
-                    for (i = 0; i<selectedShipSize;i++){
-                        if(((position+selectedShipSize)%10)<(position%10)){
-                            position = (position%100)-(position%10)+10-(selectedShipSize)
-                             //console.log("niedobrze")
-                         }
-                         if(selectedShipDirection==0){
-                            playerPlaygroundTable[position+i].style.backgroundColor="green";
-                         }else{
-                            playerPlaygroundTable[position+(i*10)].style.backgroundColor="green";
-                         }
-                            
-                        }
-                    }else{
-                        for (i = 0; i<selectedShipSize;i++){
+                        if(selectedShipDirection==0){
                             if(((position+selectedShipSize)%10)<(position%10)){
                                 position = (position%100)-(position%10)+10-(selectedShipSize)
-                                 //console.log("niedobrze")
-                             }
-                             if(selectedShipDirection==0){
-                                playerPlaygroundTable[position+i].style.backgroundColor="red";
-                             }else{
-                                playerPlaygroundTable[position+(i*10)].style.backgroundColor="red";
-                             }
+                            }
+                            for(i=0;i <selectedShipSize;i++){
+                                if(usedPlayerPlaygroundSquers.includes(position+i)){
+                                    canBePlaced = false
+                                }
+                            }
+                            if(canBePlaced){
+                                for (i = 0; i<selectedShipSize;i++){
+                                    playerPlaygroundTable[position+i].style.backgroundColor="green";
+                                }    
+                            }else{
+                                for (i = 0; i<selectedShipSize;i++){
+                                    playerPlaygroundTable[position+i].style.backgroundColor="red";
+                                }   
+                            }
+                        }else{
+                            for(i=0;i <selectedShipSize;i++){
+                                if(usedPlayerPlaygroundSquers.includes(position+(i*10))){
+                                    canBePlaced = false
+                                }
+                            }
+                            if(canBePlaced){
+                                for (i = 0; i<selectedShipSize;i++){
+                                    playerPlaygroundTable[position+(i*10)].style.backgroundColor="green";
+                                }
+                            }else{
+                                for (i = 0; i<selectedShipSize;i++){
+                                    playerPlaygroundTable[position+(i*10)].style.backgroundColor="red";
+                                }
+                            }
+                        }          
                     
-                            
-                        }
+                    
                         
-                    }
-                  }
+                }
                 
             })
             squer.addEventListener("mouseleave",function(event){
                 if(selectedShip!=null){
                 var position = playerPlaygroundTable.findIndex(e => e==event.currentTarget)
-                for (i = 0; i<selectedShipSize;i++){
+                if(selectedShipDirection==0){
                     if(((position+selectedShipSize)%10)<(position%10)){
                         position = (position%100)-(position%10)+10-(selectedShipSize)
-                         //console.log("niedobrze")
+                    }
+                    for (i = 0; i<selectedShipSize;i++){
+                        playerPlaygroundTable[position+i].style.backgroundColor="antiquewhite";
                      }
-                     if(selectedShipDirection==0){
-                    playerPlaygroundTable[position+i].style.backgroundColor="antiquewhite";
+
+                        
                      }else{
+                        for (i = 0; i<selectedShipSize;i++){
                         playerPlaygroundTable[position+(i*10)].style.backgroundColor="antiquewhite";
+                        }
                      }
-               }
+               
             }
                shipsOnPlayground.forEach(function(i,j){
                 shipsOnPlayground[j].style.backgroundColor="black"
@@ -83,7 +90,6 @@ function generatePlayerPlayground(){
                         var position = playerPlaygroundTable.findIndex(e => e==event.target)
                         if(((position+selectedShipSize)%10)<(position%10)){
                           position = (position%100)-(position%10)+10-(selectedShipSize)
-                           //console.log("niedobrze")
                        }
                         placeShip(position, selectedShipSize, selectedShipDirection)
                         for (i = 0; i<selectedShipSize;i++){
@@ -101,11 +107,51 @@ function generatePlayerPlayground(){
             }) 
             squer.addEventListener("contextmenu",function(event){
                 event.preventDefault()
+                var position = playerPlaygroundTable.findIndex(e => e==event.currentTarget)
+                canBePlaced = true
                 if(selectedShipDirection==0){
                     selectedShipDirection=1
+                    
+                for (i = 1; i<selectedShipSize;i++){
+                    playerPlaygroundTable[position+i].style.backgroundColor="antiquewhite";
+                    
+                }
+                for(i=0;i <selectedShipSize;i++){
+                    if(usedPlayerPlaygroundSquers.includes(position+(i*10))){
+                        canBePlaced = false
+                    }
+                }
+                if(canBePlaced){
+                    for (i = 0; i<selectedShipSize;i++){
+                        playerPlaygroundTable[position+(i*10)].style.backgroundColor="green";
+                    }
+                }else{
+                    for (i = 0; i<selectedShipSize;i++){
+                        playerPlaygroundTable[position+(i*10)].style.backgroundColor="red";
+                    }
+                }
                 }else{
                     selectedShipDirection=0
+                    for (i = 1; i<selectedShipSize;i++){
+                        playerPlaygroundTable[position+(i*10)].style.backgroundColor="antiquewhite";
+                    }
+                    for(i=0;i <selectedShipSize;i++){
+                        if(usedPlayerPlaygroundSquers.includes(position+i)){
+                            canBePlaced = false
+                        }
+                    }
+                    if(canBePlaced){
+                        for (i = 0; i<selectedShipSize;i++){
+                            playerPlaygroundTable[position+i].style.backgroundColor="green";
+                        }
+                }else{
+                    for (i = 0; i<selectedShipSize;i++){
+                        playerPlaygroundTable[position+i].style.backgroundColor="red";
+                    }
                 }
+                    
+                }
+                
             })              
         }
         var clearBoth = document.createElement("div")
