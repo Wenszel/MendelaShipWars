@@ -40,7 +40,7 @@ var mouseClickHandler = function(event) {
                 selectedShip = null
             }
         }
-        changeColorOfShipsToBlack()
+        changeColorOfShipsToblue()
         
     //jezeli nie ma zaznaczonego zadnego statku to mozna usuwac statek z planszy
     }else{
@@ -127,7 +127,7 @@ function generatePlayerPlayground(){
                             position = checkIsSizeSuitable(position, selectedShipDirection)
                             changeColorOfSquers(position, "antiquewhite", 10)
                         }  
-                        changeColorOfShipsToBlack()
+                        changeColorOfShipsToblue()
                     }
                     
                 })
@@ -203,7 +203,7 @@ function placeShip(position, shipSize, direction){
         //dla pierwszego rzedu
         for(i = 0; i<shipSize;i++){
             usedPlayerPlaygroundSquers.push(pos+i)
-            playerPlaygroundTable[pos+i].style.backgroundColor= "black"
+            playerPlaygroundTable[pos+i].style.backgroundColor= "blue"
             shipsOnPlayerPlayground.push(pos+i)
         }
         if(pos%100<10){
@@ -282,7 +282,7 @@ function placeShip(position, shipSize, direction){
     if(direction==1){ //pion
         for(i = 0;i<shipSize;i++){
             usedPlayerPlaygroundSquers.push(pos+(i*10))
-            playerPlaygroundTable[pos+(i*10)].style.backgroundColor= "black"
+            playerPlaygroundTable[pos+(i*10)].style.backgroundColor= "blue"
             shipsOnPlayerPlayground.push(pos+(i*10))
         }
         if(pos%10==0){
@@ -460,10 +460,10 @@ function checkIsSizeSuitable(position){
     return position
 }
 //funkcja pomocnicza do listenerów zmieniająca kolory squerów ze statkami na czarne
-function changeColorOfShipsToBlack(){
+function changeColorOfShipsToblue(){
     shipsOnPlayground.forEach(function(ship){
         ship.forEach(function(k){
-            k.style.backgroundColor="black"
+            k.style.backgroundColor="blue"
         })
         
     })

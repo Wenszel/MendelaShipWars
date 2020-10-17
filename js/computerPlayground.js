@@ -132,7 +132,7 @@ function generateComputerShip(shipSize){
         //dla squerow na ktorych jest statek
         for(i = 0; i<shipSize;i++){
             usedComputerPlaygroundSquers.push(pos+i)
-            //computerPlaygroundTable[pos+i].style.backgroundColor= "black"
+            //computerPlaygroundTable[pos+i].style.backgroundImage = "url(../images/cross.jpg)"
             shipsOnComputerPlayground.push(pos+i)
         }  
     }
