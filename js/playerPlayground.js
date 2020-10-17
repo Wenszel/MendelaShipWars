@@ -10,19 +10,25 @@ var canBePlaced = true
 var isGeneratedPlayerPlayground = false
 
 function generatePlayerPlayground(){
+    //wygeneruj tylko jezeli nie zostalo jeszcze wygenerowane
     if(isGeneratedPlayerPlayground == false){
         var shipsMenu = document.getElementById("shipsMenu")
+        //wygeneruj plansze
         for(i = 0; i<sizeX; i++){
             for(j= 0;j<sizeY;j++){
+                //dodajemy kwadraty na planszy
                 var squer = document.createElement("div")
                 squer.classList.add("squer")
                 playerPlaygroundTable.push(squer)
                 playerPlayground.appendChild(squer)
+                //gdy mysza wjedzie kwadrat => kolorowanie kwadratu na czerwono/zielono
                 squer.addEventListener("mouseenter",function(event){
                     if(selectedShip!=null){
+                        //pozycja to miejsce na planszy na ktorym jest myszka
                         var position = playerPlaygroundTable.findIndex(e => e==event.currentTarget)
                         canBePlaced = true
                         if(selectedShipDirection==0){
+                            //sprawdzamy czy sie zmiesci statek
                             position = checkIsSizeSuitable(position, selectedShipDirection)
                             checkCanBePlaced(position,1)
                             if(canBePlaced){
@@ -41,7 +47,7 @@ function generatePlayerPlayground(){
                         }               
                     }
                 })
-
+                //gdy myszka wyjdzie z kwadratu => kolorowanie kwadratu na czerwono/zielono
                 squer.addEventListener("mouseleave",function(event){
                     if(selectedShip!=null){
                         var position = playerPlaygroundTable.findIndex(e => e==event.currentTarget)
@@ -55,9 +61,8 @@ function generatePlayerPlayground(){
                     }
                     changeColorOfShipsToBlack()
                 })
-
+                //gdy klikniete => postawienie statku, usuniecie statku 
                 squer.addEventListener("click",function(event) {
-
                     var position = playerPlaygroundTable.findIndex(e => e==event.target)
                     if(selectedShip!=null){
                         if(selectedShipDirection==0){
@@ -65,6 +70,7 @@ function generatePlayerPlayground(){
                             if(canBePlaced){   
                                 position = checkIsSizeSuitable(position, selectedShipDirection)
                                 placeShip(position, selectedShipSize, selectedShipDirection)
+                                //tworzymy tablice do ktorej zapisujemy divy skladajace sie na statek zeby potem mozna bylo go usunac z mapy => patrz else tego ifa
                                 var tablica = []
                                 for (i = 0; i<selectedShipSize;i++){
                                     tablica.push(playerPlaygroundTable[position+i])
@@ -102,18 +108,21 @@ function generatePlayerPlayground(){
                                 //Ta czesc kodu odpowiada za usuniecie z usedSquers zajetych przez ten statek pozycji
                                 var generatedShipPosition = playerPlaygroundTable.indexOf(ship[0])
                                 var generatedShipDiretion 
+                                //kierunek generowanego statku okreslamy na podstawie tego czy o 10 pozycji na planszy jest ten sam squer co w drugim elemencie tablicy ship
                                 if(playerPlaygroundTable.indexOf(ship[0])+10==playerPlaygroundTable.indexOf(ship[1])){
                                     generatedShipDiretion=1
                                 }else{
                                     generatedShipDiretion=0
                                 }
                                 var generatedShipSize = counter
-
+                                //funkcja usuwajace usedSquery
                                 releaseUsedSquers(generatedShipPosition, generatedShipSize,generatedShipDiretion)
+                                //usuwa ze shipsOnPlayground wybrany statek
                                 shipsOnPlayground.splice(shipsOnPlayground.indexOf(ship),1)
                             }
                         })
                 }
+                //pojawienie sie przycisku jezeli wszystkie 10 statkow beda na mapie
                 if(shipsOnPlayground.length==10){
                     document.getElementById("startGame").style.visibility="visible"
                 }else{
@@ -170,10 +179,12 @@ function generatePlayerPlayground(){
         clearBoth.style.clear = "both"
         playerPlayground.appendChild(clearBoth)
     }
+    
     ships.forEach(function(shipSize){
         generatePlayerShipMenu(shipSize)
     }
     )
+    //Ustawiamy pierwszy statek jako ten domyslny
     selectedShip = shipsTable[0]
     selectedShipSize=4
     selectedShip.style.backgroundColor="blue"
