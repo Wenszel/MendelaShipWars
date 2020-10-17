@@ -132,7 +132,8 @@ function generateComputerShip(shipSize){
         //dla squerow na ktorych jest statek
         for(i = 0; i<shipSize;i++){
             usedComputerPlaygroundSquers.push(pos+i)
-            computerPlaygroundTable[pos+i].style.backgroundColor= "black"
+            //computerPlaygroundTable[pos+i].style.backgroundColor= "black"
+            shipsOnComputerPlayground.push(pos+i)
         }  
     }
     if(direction==1){ //pion
@@ -200,7 +201,8 @@ function generateComputerShip(shipSize){
         }
         for(i = 0;i<shipSize;i++){
             usedComputerPlaygroundSquers.push(pos+(i*10))
-            computerPlaygroundTable[pos+(i*10)].style.backgroundColor= "black"
+            //computerPlaygroundTable[pos+(i*10)].style.backgroundColor= "black"
+            shipsOnComputerPlayground.push(pos+(i*10))
         }
     }            
 }
