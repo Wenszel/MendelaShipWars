@@ -9,16 +9,17 @@
 </head>
 <body>
     <button onclick="generateComputerPlayground(), generatePlayerPlayground()">Generate Maps!</button>
-    <button>Start Game</button>
+    
     <div id="shipsMenu"></div>
     <div id="playerPlayground"></div>
     <div id="computerPlayground"></div>
-    <script src="js/computerPlayground.js"></script>
-    <script src="js/playerPlayground.js"></script>
+    <button id="startGame">Start Game</button>
     <script>
         var sizeY = 10
         var sizeX = 10
         var ships = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
     </script>
+    <script src="js/computerPlayground.js"></script>
+    <script src="js/playerPlayground.js"></script>
 </body>
 </html>

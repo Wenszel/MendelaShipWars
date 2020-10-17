@@ -24,3 +24,7 @@
 body{
     background-color: antiquewhite;
 }
+#startGame{
+    visibility: hidden;
+  margin: 0 auto;
+}
