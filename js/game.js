@@ -51,21 +51,14 @@ function startGame(){
     document.getElementById("startGame").style.visibility="hidden"
     
 }
-var inCharge
-var lastShooted
 //TODO: algorytm dobijania statkow
 //TODO: algorytm szukajacy najwiekszego statku na mapie
 function computerShot(){    
     do{
-        if(inCharge){
-        var position= lastShooted+10
-        }
         var position = Math.floor(Math.random() * (sizeX*sizeY))
     }while(squersShotedByComputer.includes(position))
         squersShotedByComputer.push(position)
         if(playerShipsCordinates.flat().includes(position)){
-            inCharge = true
-            lastShooted = position
             playerPlaygroundTable[position].style.backgroundImage = "url(images/cross.png)";
             if(winChecker(playerShipsCordinates.flat(),squersShotedByComputer)){
                 var revange = confirm("Przegrałeś :( Rewanz?")
@@ -83,7 +76,6 @@ function computerShot(){
                 setTimeout(computerShot,1000)
             }
         }else{
-            inCharge = false
             playerPlaygroundTable[position].style.backgroundImage = "url(images/dot.png)";
             playerTurn=true
 }
