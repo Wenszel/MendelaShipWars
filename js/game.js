@@ -7,6 +7,12 @@ var winner = null
 var winChecker = (playground, squersShoted) => playground.every(i => squersShoted.includes(i))
 function startGame(){
     //usuniecie wszystkich listenerow
+    playerPlaygroundTable.forEach(function(squer){
+        squer.style.cursor="none"
+        squer.addEventListener("click",function(event){
+            alert("To twoja plansza")
+        })
+    })
     computerPlaygroundTable.forEach(function(squer){
         squer.style.cursor = "pointer"
         squer.addEventListener("click",function(event){
@@ -18,19 +24,17 @@ function startGame(){
                 }
                 squersShotedByPlayer.push(position)
                 if(shipsOnComputerPlayground.includes(position)){
-                    this.style.backgroundColor="url(images/cross.png)";
+                    this.style.backgroundImage="url(images/cross.png)";
                 }else{
                     this.style.backgroundImage = "url(images/dot.png)";
                     playerTurn=false
                     
-                    computerShot()
-                
-                    if(winChecker(shipsOnPlayerPlayground,squersShotedByComputer)){
-                        alert("przegrales")
-                    }
+                    setTimeout(computerShot, 1000)
+                   
+                    
                 }
                 if(winChecker(shipsOnComputerPlayground,squersShotedByPlayer)){
-                    setTimeout(function(){alert("wygrales")},500)
+                    setTimeout(function(){alert("Wygrałeś")},500)
                 }
                 
             }else{
@@ -45,20 +49,41 @@ function startGame(){
     document.getElementById("startGame").style.visibility="hidden"
     
 }
-function computerShot(){
-    setTimeout(function(){
+var inCharge
+var lastShooted
+//TODO: algorytm dobijania statkow
+//TODO: algorytm szukajacy najwiekszego statku na mapie
+//TODO: po dobiciu statku ma sie zaczerwienic
+function computerShot(){    
     do{
+        if(inCharge){
+        var position= lastShooted+10
+        }
         var position = Math.floor(Math.random() * (sizeX*sizeY))
     }while(squersShotedByComputer.includes(position))
-    
         squersShotedByComputer.push(position)
         if(shipsOnPlayerPlayground.includes(position)){
+            inCharge = true
+            lastShooted = position
             playerPlaygroundTable[position].style.backgroundImage = "url(images/cross.png)";
-            playerTurn=true
+            if(winChecker(shipsOnPlayerPlayground,squersShotedByComputer)){
+                var revange = confirm("Przegrałeś :( Rewanz?")
+                if (revange){
+                    isGeneratedPlayerPlayground = false
+                    isGeneratedComputerPlayground = false
+                    document.getElementById("playerPlayground").removeChild
+                    document.getElementById("computerPlayground").removeChild
+                    generatePlayerPlayground()
+                    generateComputerPlayground()
+                }
+                
+            }else{
+                setTimeout(computerShot,1000)
+            }
         }else{
+            inCharge = false
             playerPlaygroundTable[position].style.backgroundImage = "url(images/dot.png)";
             playerTurn=true
-        }
-},1000)
+}
 
 }

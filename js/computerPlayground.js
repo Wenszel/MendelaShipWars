@@ -1,10 +1,10 @@
-var isGenerated = false
+var isGeneratedComputerPlayground = false
 var computerPlaygroundTable = [] //przechowuje divy squery 
 var computerPlayground = document.getElementById("computerPlayground")
 var usedComputerPlaygroundSquers = [] //przechowuje indexy squerów które zostały uzyte do 
 //funkcja generująca mapę i statki na niej
 function generateComputerPlayground(){
-    if(isGenerated==false){
+    if(isGeneratedComputerPlayground==false){
         for(i = 0; i<sizeX; i++){
             for(j= 0;j<sizeY;j++){
                 var squer = document.createElement("div")
@@ -20,7 +20,7 @@ function generateComputerPlayground(){
         ships.forEach(function(i) { // i = rozmiar statku
             generateComputerShip(i)
         });
-        isGenerated = true //zmiana boolina podowuje ze mapa sie drugi raz po kliknieciu buttona nie uruchomi
+        isGeneratedComputerPlayground = true //zmiana boolina podowuje ze mapa sie drugi raz po kliknieciu buttona nie uruchomi
     }     
 }
 //funckcja generujaca statki na podstawie rozmiaru 
