@@ -201,11 +201,13 @@ function placeShip(position, shipSize, direction){
     var pos = position
     if(direction==0){ //poziom
         //dla pierwszego rzedu
+        var tablica = []
         for(i = 0; i<shipSize;i++){
             usedPlayerPlaygroundSquers.push(pos+i)
             playerPlaygroundTable[pos+i].style.backgroundColor= "blue"
-            shipsOnPlayerPlayground.push(pos+i)
+            tablica.push(pos+i)
         }
+        playerShipsCordinates.push(tablica)
         if(pos%100<10){
             if(pos%10==0){
                 for(i=0;i<shipSize;i++){
@@ -280,11 +282,13 @@ function placeShip(position, shipSize, direction){
         
     }
     if(direction==1){ //pion
-        for(i = 0;i<shipSize;i++){
+        var tablica = []
+        for(i = 0; i<shipSize;i++){
             usedPlayerPlaygroundSquers.push(pos+(i*10))
             playerPlaygroundTable[pos+(i*10)].style.backgroundColor= "blue"
-            shipsOnPlayerPlayground.push(pos+(i*10))
+            tablica.push(pos+(i*10))
         }
+        playerShipsCordinates.push(tablica)
         if(pos%10==0){
             if(pos%100<10){
                 for(i=0;i<shipSize;i++){

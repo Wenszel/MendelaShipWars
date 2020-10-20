@@ -130,11 +130,13 @@ function generateComputerShip(shipSize){
             }
         }
         //dla squerow na ktorych jest statek
-        for(i = 0; i<shipSize;i++){
+        var tablica = []
+        for(i = 0;i<shipSize;i++){
             usedComputerPlaygroundSquers.push(pos+i)
-            //computerPlaygroundTable[pos+i].style.backgroundImage = "url(../images/cross.jpg)"
-            shipsOnComputerPlayground.push(pos+i)
-        }  
+            computerPlaygroundTable[pos+i].style.backgroundColor= "white"
+            tablica.push(pos+i)
+        }
+        computerShipsCordinates.push(tablica)
     }
     if(direction==1){ //pion
         if(pos%10==0){
@@ -199,11 +201,14 @@ function generateComputerShip(shipSize){
                 usedComputerPlaygroundSquers.push(pos+(shipSize*10)-1, pos+(shipSize*10), pos+(shipSize*10)+1)
             }
         }
+        //Dodajemy tablice ktora przechowuje wszystkie 
+        var tablica = []
         for(i = 0;i<shipSize;i++){
             usedComputerPlaygroundSquers.push(pos+(i*10))
-            //computerPlaygroundTable[pos+(i*10)].style.backgroundColor= "black"
-            shipsOnComputerPlayground.push(pos+(i*10))
+            computerPlaygroundTable[pos+(i*10)].style.backgroundColor= "white"
+            tablica.push(pos+(i*10))
         }
+        computerShipsCordinates.push(tablica)
     }            
 }
 //funkcja pomocniczna która generuje pozycje 

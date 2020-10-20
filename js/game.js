@@ -1,10 +1,11 @@
 var squersShotedByPlayer = []
 var squersShotedByComputer = []
-var shipsOnComputerPlayground = []
-var shipsOnPlayerPlayground = []
+var computerShipsCordinates = [] //przechowuje numery tablicy computerPlaygroundTable w których znajduja sie statki
+var playerShipsCordinates = []
 var playerTurn = true
 var winner = null
 var winChecker = (playground, squersShoted) => playground.every(i => squersShoted.includes(i))
+var sunkCkecker = (ship, squersShoted) => ship.every(i => squersShoted.includes(i))
 function startGame(){
     //usuniecie wszystkich listenerow
     playerPlaygroundTable.forEach(function(squer){
@@ -23,17 +24,18 @@ function startGame(){
                     alert("Tu juz strzelales")
                 }
                 squersShotedByPlayer.push(position)
-                if(shipsOnComputerPlayground.includes(position)){
+                if(computerShipsCordinates.flat().includes(position)){
                     this.style.backgroundImage="url(images/cross.png)";
+                    checkIsSunk(position, 0)
                 }else{
                     this.style.backgroundImage = "url(images/dot.png)";
                     playerTurn=false
                     
                     setTimeout(computerShot, 1000)
-                   
+                    
                     
                 }
-                if(winChecker(shipsOnComputerPlayground,squersShotedByPlayer)){
+                if(winChecker(computerShipsCordinates.flat(),squersShotedByPlayer)){
                     setTimeout(function(){alert("Wygrałeś")},500)
                 }
                 
@@ -53,7 +55,6 @@ var inCharge
 var lastShooted
 //TODO: algorytm dobijania statkow
 //TODO: algorytm szukajacy najwiekszego statku na mapie
-//TODO: po dobiciu statku ma sie zaczerwienic
 function computerShot(){    
     do{
         if(inCharge){
@@ -62,11 +63,11 @@ function computerShot(){
         var position = Math.floor(Math.random() * (sizeX*sizeY))
     }while(squersShotedByComputer.includes(position))
         squersShotedByComputer.push(position)
-        if(shipsOnPlayerPlayground.includes(position)){
+        if(playerShipsCordinates.flat().includes(position)){
             inCharge = true
             lastShooted = position
             playerPlaygroundTable[position].style.backgroundImage = "url(images/cross.png)";
-            if(winChecker(shipsOnPlayerPlayground,squersShotedByComputer)){
+            if(winChecker(playerShipsCordinates.flat(),squersShotedByComputer)){
                 var revange = confirm("Przegrałeś :( Rewanz?")
                 if (revange){
                     isGeneratedPlayerPlayground = false
@@ -78,6 +79,7 @@ function computerShot(){
                 }
                 
             }else{
+                checkIsSunk(position, 1)
                 setTimeout(computerShot,1000)
             }
         }else{
@@ -86,4 +88,22 @@ function computerShot(){
             playerTurn=true
 }
 
+}
+function checkIsSunk(position, player){
+    if(player == 0){
+        var ship = computerShipsCordinates.find(i => i.includes(position))
+        if(sunkCkecker(ship,squersShotedByPlayer)){
+            ship.forEach(function(i){
+                computerPlaygroundTable[i].style.backgroundColor = "red"
+            })   
+        }
+    }else{
+        var ship = playerShipsCordinates.find(i => i.includes(position))
+        if(sunkCkecker(ship,squersShotedByComputer)){
+            ship.forEach(function(i){
+                playerPlaygroundTable[i].style.backgroundColor = "red"
+            }) 
+            //TODO: mozna dodac do shotedByComputer punkty wokol statku => ten durny dlugi algorytm dodany po raz kolejny XD
+        }
+    }
 }
