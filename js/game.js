@@ -91,10 +91,22 @@ function checkIsSunk(position, player){
         }
     }else{
         var ship = playerShipsCordinates.find(i => i.includes(position))
+        console.log("pozycja statku zatopionego"+ship+" "+ship[0])
         if(sunkCkecker(ship,squersShotedByComputer)){
+            var shootedShipSize = 0
             ship.forEach(function(i){
                 playerPlaygroundTable[i].style.backgroundColor = "red"
-            }) 
+                shootedShipSize+=1
+            })
+            var shootedShipPosition = ship[0]
+            var shootedShipDiretion 
+                //kierunek generowanego statku okreslamy na podstawie tego czy o 10 pozycji na planszy jest ten sam squer co w drugim elemencie tablicy ship
+                if(playerPlaygroundTable.indexOf(ship[0])+10==playerPlaygroundTable.indexOf(ship[1])){
+                    shootedShipDiretion=1
+                }else{
+                    shootedShipDiretion=0
+                }
+                shipManager(shootedShipSize,shootedShipPosition, shootedShipDiretion, "squersShooted")
             //TODO: mozna dodac do shotedByComputer punkty wokol statku => ten durny dlugi algorytm dodany po raz kolejny XD
         }
     }

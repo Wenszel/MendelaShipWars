@@ -16,7 +16,7 @@ var mouseClickHandler = function(event) {
             checkCanBePlaced(position, 1)
             if(canBePlaced){   
                 position = checkIsSizeSuitable(position, selectedShipDirection)
-                placeShip(position, selectedShipSize, selectedShipDirection)
+                shipManager(selectedShipSize, position, selectedShipDirection, "usedPlayerSquers")
                 //tworzymy tablice do ktorej zapisujemy divy skladajace sie na statek zeby potem mozna bylo go usunac z mapy => patrz else tego ifa
                 var tablica = []
                 for (i = 0; i<selectedShipSize;i++){
@@ -30,7 +30,7 @@ var mouseClickHandler = function(event) {
             checkCanBePlaced(position, 10)
             if(canBePlaced){
                 position = checkIsSizeSuitable(position, selectedShipDirection)   
-                placeShip(position, selectedShipSize, selectedShipDirection)
+                shipManager(selectedShipSize, position, selectedShipDirection, "usedPlayerSquers")
                 var tablica = []
                 for (i = 0; i<selectedShipSize;i++){
                     tablica.push(playerPlaygroundTable[position+(i*10)])
@@ -63,7 +63,7 @@ var mouseClickHandler = function(event) {
                 }
                 var generatedShipSize = counter
                 //funkcja usuwajace usedSquery
-                releaseUsedSquers(generatedShipPosition, generatedShipSize,generatedShipDiretion)
+                shipManager(generatedShipPosition, generatedShipSize,generatedShipDiretion, "releasePlayerSquers")
                 //usuwa ze shipsOnPlayground wybrany statek
                 shipsOnPlayground.splice(shipsOnPlayground.indexOf(ship),1)
             }
@@ -80,7 +80,7 @@ if(shipsOnPlayground.length==10){
 function generatePlayerPlayground(){
     //wygeneruj tylko jezeli nie zostalo jeszcze wygenerowane
     if(isGeneratedPlayerPlayground == false){
-        var shipsMenu = document.getElementById("shipsMenu")
+        
         //wygeneruj plansze
         for(i = 0; i<sizeX; i++){
             for(j= 0;j<sizeY;j++){
@@ -138,6 +138,7 @@ function generatePlayerPlayground(){
                 squer.addEventListener("contextmenu",function(event){
                     if(selectedShip!=null){
                         event.preventDefault()
+                        
                         var position =  playerPlaygroundTable.findIndex(e => e==event.target)
                         canBePlaced = true
                         if(selectedShipDirection==0){
@@ -152,6 +153,7 @@ function generatePlayerPlayground(){
                             }
                             position = checkIsSizeSuitable(position, selectedShipDirection)
                             checkCanBePlaced(position,10)
+                            changeColorOfShipsToblue() 
                             if(canBePlaced){
                                 changeColorOfSquers(position, "green", 10)
                             }else{
@@ -169,6 +171,7 @@ function generatePlayerPlayground(){
                             
                             position = checkIsSizeSuitable(position, selectedShipDirection)
                             checkCanBePlaced(position,1)
+                            changeColorOfShipsToblue() 
                             if(canBePlaced){
                                 changeColorOfSquers(position, "green", 1)
                             }else{
@@ -196,173 +199,9 @@ function generatePlayerPlayground(){
 }
 
 }
-//funkcja odpowiadajaca za umieszczenie na mapie statku na podstawie jego pozycji rozmiaru i kierunku oraz dodanie do usedSquers elementow wokol niego
-function placeShip(position, shipSize, direction){
-    var pos = position
-    if(direction==0){ //poziom
-        //dla pierwszego rzedu
-        var tablica = []
-        for(i = 0; i<shipSize;i++){
-            usedPlayerPlaygroundSquers.push(pos+i)
-            playerPlaygroundTable[pos+i].style.backgroundColor= "blue"
-            tablica.push(pos+i)
-        }
-        playerShipsCordinates.push(tablica)
-        if(pos%100<10){
-            if(pos%10==0){
-                for(i=0;i<shipSize;i++){
-                    usedPlayerPlaygroundSquers.push(pos+i+10)
-                }
-                usedPlayerPlaygroundSquers.push(pos+shipSize, pos+10+shipSize)
-            }
-            else if((pos+shipSize-1)%10==9){
-                usedPlayerPlaygroundSquers.push(pos-1, pos+10-1)
-                for(i=0;i<shipSize;i++){
-                    usedPlayerPlaygroundSquers.push(pos+i+10)
-                }             
-            }else{
-                usedPlayerPlaygroundSquers.push(pos-1, pos+10-1, pos+shipSize, pos+10+shipSize)
-                for(i=0;i<shipSize;i++){
-                    usedPlayerPlaygroundSquers.push(pos+i+10)
-                }
-            }
-        //dla ostatniego rzedu
-        }else if(pos%100>90){
-            if(pos%10==0){
-                for(i=0;i<shipSize;i++){
-                    usedPlayerPlaygroundSquers.push(pos+i-10)
-                }
-                usedPlayerPlaygroundSquers.push(pos+shipSize, pos-10+shipSize)
-                usedPlayerPlaygroundSquers.push()
-            }
-            else if((pos+shipSize-1)%10==9){
-                usedPlayerPlaygroundSquers.push(pos-1, pos-10-1)
-                for(i=0;i<shipSize;i++){
-                    usedPlayerPlaygroundSquers.push(pos+i-10)
-                }  
-            }else{
-                usedPlayerPlaygroundSquers.push(pos-1, pos-10-1, pos+shipSize, pos-10+shipSize)
-                for(i=0;i<shipSize;i++){
-                    usedPlayerPlaygroundSquers.push(pos+i-10)
-                }
-            }
-        //dla srodkowych rzedow
-        }else{
-            if(pos%10==0){
-                for(i=0;i<shipSize;i++){
-                    usedPlayerPlaygroundSquers.push(pos+i-10)
-                    usedPlayerPlaygroundSquers.push(pos+i+10)
-                }
-                usedPlayerPlaygroundSquers.push(pos+shipSize)
-                usedPlayerPlaygroundSquers.push(pos-10+shipSize)
-                usedPlayerPlaygroundSquers.push(pos+10+shipSize)
-            }
-            else if((pos+shipSize-1)%10==9){
-                usedPlayerPlaygroundSquers.push(pos-1)
-                usedPlayerPlaygroundSquers.push(pos-10-1)
-                usedPlayerPlaygroundSquers.push(pos+10-1)
-                for(i=0;i<shipSize;i++){
-                    usedPlayerPlaygroundSquers.push(pos+i-10)
-                    usedPlayerPlaygroundSquers.push(pos+i+10)
-                }
-                
-            }else{
-                usedPlayerPlaygroundSquers.push(pos-1)
-                usedPlayerPlaygroundSquers.push(pos-10-1)
-                usedPlayerPlaygroundSquers.push(pos+10-1)
-                usedPlayerPlaygroundSquers.push(pos+shipSize)
-                usedPlayerPlaygroundSquers.push(pos-10+shipSize)
-                usedPlayerPlaygroundSquers.push(pos+10+shipSize)
-                for(i=0;i<shipSize;i++){
-                    usedPlayerPlaygroundSquers.push(pos+i-10)
-                    usedPlayerPlaygroundSquers.push(pos+i+10)
-                }
-            }
-        }
-        
-    }
-    if(direction==1){ //pion
-        var tablica = []
-        for(i = 0; i<shipSize;i++){
-            usedPlayerPlaygroundSquers.push(pos+(i*10))
-            playerPlaygroundTable[pos+(i*10)].style.backgroundColor= "blue"
-            tablica.push(pos+(i*10))
-        }
-        playerShipsCordinates.push(tablica)
-        if(pos%10==0){
-            if(pos%100<10){
-                for(i=0;i<shipSize;i++){
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)+1)
-                    }
-                    usedPlayerPlaygroundSquers.push(pos+(shipSize*10)+1, pos+(10*shipSize))
-                }
-                else if((pos+shipSize)%100>=90){
-                    usedPlayerPlaygroundSquers.push(pos-10, pos-10+1)
-                    for(i=0;i<shipSize;i++){
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)+1)
-                    }             
-                }else{
-                    usedPlayerPlaygroundSquers.push(pos-10, pos-10+1, pos+(10*shipSize), pos+(10*shipSize)+1)
-                    for(i=0;i<shipSize;i++){
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)+1)
-                    }
-                }
-            //dla ostatniego rzedu
-        }else if(pos%10==9){
-                if(pos%100<10){
-                    for(i=0;i<shipSize;i++){
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)-1)
-                    }
-                    usedPlayerPlaygroundSquers.push(pos+(shipSize*10), pos-1+(shipSize*10))
-                }
-                else if((pos+shipSize)%100>=90){
-                    usedPlayerPlaygroundSquers.push(pos-10, pos-10-1)
-                    for(i=0;i<shipSize;i++){
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)-1)
-                    }  
-                }else{
-                    usedPlayerPlaygroundSquers.push(pos-10, pos-10-1, pos+(shipSize*10), pos-1+(shipSize*10))
-                    for(i=0;i<shipSize;i++){
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)-1)
-                    }
-                }
-            //dla srodkowych rzedow
-            }else{
-                if(pos%100<10){
-                    for(i=0;i<shipSize;i++){
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)-1)
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)+1)
-                    }
-                    usedPlayerPlaygroundSquers.push(pos+(shipSize*10)-1)
-                    usedPlayerPlaygroundSquers.push(pos+(shipSize*10))
-                    usedPlayerPlaygroundSquers.push(pos+(shipSize*10)+1)
-                }
-                else if((pos+shipSize)%100>=90){
-                    usedPlayerPlaygroundSquers.push(pos-10-1)
-                    usedPlayerPlaygroundSquers.push(pos-10)
-                    usedPlayerPlaygroundSquers.push(pos-10+1)
-                    for(i=0;i<shipSize;i++){
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)-1)
-                        usedPlayerPlaygroundSquers.push(pos+(i+10)+1)
-                    }                        
-                }else{
-                    usedPlayerPlaygroundSquers.push(pos-10-1)
-                    usedPlayerPlaygroundSquers.push(pos-10)
-                    usedPlayerPlaygroundSquers.push(pos-10+1)
-                    for(i=0;i<shipSize;i++){
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)-1)
-                        usedPlayerPlaygroundSquers.push(pos+(i*10)+1)
-                    }
-                    usedPlayerPlaygroundSquers.push(pos+(shipSize*10)-1)
-                    usedPlayerPlaygroundSquers.push(pos+(shipSize*10))
-                    usedPlayerPlaygroundSquers.push(pos+(shipSize*10)+1)
-                }
-            }
-        
-    }            
-}
 //funkcja ktora generuje menu statkow obok planszy
 function generatePlayerShipMenu(shipSize){
+    var shipsMenu = document.getElementById("shipsMenu")
     //dodajemy statek
     var ship = document.createElement("div")
     ship.classList.add("ship")
@@ -471,174 +310,6 @@ function changeColorOfShipsToblue(){
         })
         
     })
-}
-//funkcja zwalniajaca uzyte miejsca => wykonuje sie gdy jakis statek jest usuwany z mapy
-function releaseUsedSquers(position,shipSize,direction){
-    // funkcja działa na tej samej zasadzie co generateComputerShip
-    if(direction==0){ 
-        for(i = 0; i<shipSize;i++){
-            releaseUsedSquer(position+i)
-        }
-        if(position%100<10){
-            if(position%10==0){
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+i+10)
-                }
-                releaseUsedSquer(position+shipSize)
-                releaseUsedSquer(position+10+shipSize)
-            }
-            else if((position+shipSize-1)%10==9){
-                releaseUsedSquer(position-1)
-                releaseUsedSquer(position+10-1)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+i+10)
-                }             
-            }else{
-                releaseUsedSquer(position-1)
-                releaseUsedSquer(position+10-1)
-                releaseUsedSquer(position+shipSize)
-                releaseUsedSquer(position+10+shipSize)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+i+10)
-                }
-            }
-        }else if(position%100>90){
-            if(position%10==0){
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+i-10)
-                }
-                releaseUsedSquer(position+shipSize)
-                releaseUsedSquer(position-10+shipSize)
-            }
-            else if((position+shipSize-1)%10==9){
-                releaseUsedSquer(position-1)
-                releaseUsedSquer(position-10-1)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+i-10)
-                }  
-            }else{
-                releaseUsedSquer(position-1)
-                releaseUsedSquer(position-10-1) 
-                releaseUsedSquer(position+shipSize)
-                releaseUsedSquer(position-10+shipSize)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+i-10)
-                }
-            }
-        }else{
-            if(position%10==0){
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+i-10)
-                    releaseUsedSquer(position+i+10)
-                }
-                releaseUsedSquer(position+shipSize)
-                releaseUsedSquer(position-10+shipSize)
-                releaseUsedSquer(position+10+shipSize)
-            }
-            else if((position+shipSize-1)%10==9){
-                releaseUsedSquer(position-1)
-                releaseUsedSquer(position-10-1)
-                releaseUsedSquer(position+10-1)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+i-10)
-                    releaseUsedSquer(position+i+10)
-                }
-            }else{
-                releaseUsedSquer(position-1)
-                releaseUsedSquer(position-10-1)
-                releaseUsedSquer(position+10-1)
-                releaseUsedSquer(position+shipSize)
-                releaseUsedSquer(position-10+shipSize)
-                releaseUsedSquer(position+10+shipSize)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+i-10)
-                    releaseUsedSquer(position+i+10)
-                }
-            }
-        }    
-    }
-    if(direction==1){ 
-        for(i = 0;i<shipSize;i++){
-            releaseUsedSquer(position+(i*10))
-        }
-        if(position%10==0){
-            if(position%100<10){
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+(i*10)+1)
-                }
-                releaseUsedSquer(position+(shipSize*10)+1)
-                releaseUsedSquer(position+(10*shipSize))
-            }
-            else if((position+shipSize)%100>=90){
-                releaseUsedSquer(position-10)
-                releaseUsedSquer(position-10+1)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+(i*10)+1)
-                }             
-            }else{
-                releaseUsedSquer(position-10)
-                releaseUsedSquer( position-10+1)
-                releaseUsedSquer( position+(10*shipSize))
-                releaseUsedSquer( position+(10*shipSize)+1)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+(i*10)+1)
-                }
-            }
-        }else if(position%10==9){
-            if(position%100<10){
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+(i*10)-1)
-                }
-                releaseUsedSquer(position+(shipSize*10))
-                releaseUsedSquer( position-1+(shipSize*10))
-            }
-            else if((position+shipSize)%100>=90){
-                releaseUsedSquer(position-10)
-                    releaseUsedSquer( position-10-1)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+(i*10)-1)
-                }  
-            }else{
-                releaseUsedSquer(position-10)
-                releaseUsedSquer(position-10-1)
-                releaseUsedSquer(position+(shipSize*10))
-                releaseUsedSquer(position-1+(shipSize*10))
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+(i*10)-1)
-                }
-            }
-        }else{
-            if(position%100<10){
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+(i*10)-1)
-                    releaseUsedSquer(position+(i*10)+1)
-                }
-                releaseUsedSquer(position+(shipSize*10)-1)
-                releaseUsedSquer(position+(shipSize*10))
-                releaseUsedSquer(position+(shipSize*10)+1)
-            }
-            else if((position+shipSize)%100>=90){
-                releaseUsedSquer(position-10-1)
-                releaseUsedSquer(position-10)
-                releaseUsedSquer(position-10+1)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+(i*10)-1)
-                    releaseUsedSquer(position+(i+10)+1)
-                }                        
-            }else{
-                releaseUsedSquer(position-10-1)
-                releaseUsedSquer(position-10)
-                releaseUsedSquer(position-10+1)
-                for(i=0;i<shipSize;i++){
-                    releaseUsedSquer(position+(i*10)-1)
-                    releaseUsedSquer(position+(i*10)+1)
-                }
-                releaseUsedSquer(position+(shipSize*10)-1)
-                releaseUsedSquer(position+(shipSize*10))
-                releaseUsedSquer(position+(shipSize*10)+1)
-            }
-        }
-    }            
 }
 //funkcja pomocnicza do funkcji usuwania used squerów
 function releaseUsedSquer(position){
