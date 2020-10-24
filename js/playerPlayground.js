@@ -25,6 +25,7 @@ var mouseClickHandler = function(event) {
                 shipsOnPlayground.push(tablica)
                 shipsMenu.removeChild(selectedShip)
                 selectedShip = null
+                changeColorOfShipsToblue()
             }
         }else{
             checkCanBePlaced(position, 10)
@@ -38,9 +39,10 @@ var mouseClickHandler = function(event) {
                 shipsOnPlayground.push(tablica)
                 shipsMenu.removeChild(selectedShip)
                 selectedShip = null
+                changeColorOfShipsToblue()
             }
         }
-        changeColorOfShipsToblue()
+       
         
     //jezeli nie ma zaznaczonego zadnego statku to mozna usuwac statek z planszy
     }else{
@@ -245,7 +247,7 @@ function generatePlayerShipMenu(shipSize){
     }
         })
     //najechanie na statek sprawia ze jego elementy swieca sie na czerwono chyba ze jest wybrany
-    ship.addEventListener("mouseenter",function(){
+    ship.addEventListener("mouseover",function(){
         if(selectedShip!=this){
             squers = ship.childNodes
             squers.forEach(function(i,j){

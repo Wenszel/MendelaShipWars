@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="styles.css">
     
 </head>
-<body>
-    <button onclick="generateComputerPlayground(), generatePlayerPlayground()">Generate Maps!</button>
-    
+<body onload="generateComputerPlayground(), generatePlayerPlayground()">
+
     <div id="shipsMenu"></div>
-    <div id="playerPlayground"></div>
-    <div id="computerPlayground"></div>
+    <div id="playerPlayground">
+        <h1>PLAYER</h1>
+    </div>
+    <div id="computerPlayground">
+        <h1>COMPUTER</h1>
+    </div>
     <button id="startGame" onclick="startGame()">Start Game</button>
     <script>
         var sizeY = 10
