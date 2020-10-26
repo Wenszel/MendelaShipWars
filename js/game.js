@@ -7,7 +7,7 @@ var winner = null
 var winChecker = (playground, squersShoted) => playground.every(i => squersShoted.includes(i))
 var sunkCkecker = (ship, squersShoted) => ship.every(i => squersShoted.includes(i))
 function startGame(){
-    //checkWhereCanBeBiggestShip()
+   checkWhereCanBeBiggestShip()
     //usuniecie wszystkich listenerow
     playerPlaygroundTable.forEach(function(squer){
         squer.style.cursor="none"
@@ -60,7 +60,6 @@ function checkIsSunk(position, player){
         }
     }else{
         var ship = playerShipsCordinates.find(i => i.includes(position))
-  
         if(sunkCkecker(ship,squersShotedByComputer)){
             var shootedShipSize = 0
             ship.forEach(function(i){
@@ -78,7 +77,7 @@ function checkIsSunk(position, player){
                 }
            
                 shipManager(shootedShipSize,shootedShipPosition, shootedShipDirection, "squersShooted")
-
+                playerShipsCordinates.splice(playerShipsCordinates.findIndex( i => i.includes(ship[0])),1)
                 directionOfShootingCounter=0
                 isLastShootedShipSunked=true
                 return true
@@ -126,9 +125,11 @@ function computerShot(){
     
     do{
         if(isLastShootedShipSunked){
+            do{
             position = generatePosition()  
             lastShootedPosition = position
             firstShootedPosition = position
+            }while(!whereCanBePlacedBiggestShip.flat().includes(position))
         }else{
             position = lastShootedPosition+directionOfShooting[directionOfShootingCounter]
             while(!isShootingSuitable(position)){
@@ -144,13 +145,12 @@ function computerShot(){
         }
     }while(squersShotedByComputer.includes(position))
         squersShotedByComputer.push(position)
+        checkWhereCanBeBiggestShip()
         if(playerShipsCordinates.flat().includes(position)){
             playerPlaygroundTable[position].style.backgroundImage = "url(images/cross.png)";
             checkIsSunk(position, 1)
             if(winChecker(playerShipsCordinates.flat(),squersShotedByComputer)){
                 setTimeout(function(){
-
-                
                 var revange = confirm("Przegrałeś :( Rewanz?")
                 if (revange) reloadGame() 
             },500)   
@@ -163,47 +163,50 @@ function computerShot(){
 }
 
 }
-/*
-var biggestShipSize = 0
+
+var biggestShipSize
 var whereCanBePlacedBiggestShip = []
+var shipSizeTable = []
 function checkWhereCanBeBiggestShip(){
-    console.log("odpalilo sie")
-    for( i = 0; i<playerShipsCordinates.length;i++){
-        if(biggestShipSize< playerShipsCordinates[i].length){
-            biggestShipSize = playerShipsCordinates[i].length
-            console.log(biggestShipSize)
-        }
-        
+    whereCanBePlacedBiggestShip=[]
+    shipSizeTable = []
+    for( i = 0; i<playerShipsCordinates.length;i++){       
+        shipSizeTable.push(playerShipsCordinates[i].length)       
     }
+    biggestShipSize = Math.max.apply(Math, shipSizeTable)
     var tablica = []
+    if(biggestShipSize!=1){
     for( k = 0;k <sizeY;k++){
+        tutaj:
         for( i = 0; i<sizeX-biggestShipSize+1;i++){
             for( j = 0; j<biggestShipSize;j++){
-                if(squersShotedByComputer.includes(j)){
-                    break;
+                if(squersShotedByComputer.includes(i+j+(k*10))){
+                    continue tutaj;
                 }else{
                     tablica.push(i+j+(k*10))
                 }
+                
             }
             whereCanBePlacedBiggestShip.push(tablica)
             tablica = []
             
     }
-    
-    for( k = 0;k <sizeX;k++){
-        for( i = 0; i<sizeY-biggestShipSize+1;i++){
-            for( j = 0; j<biggestShipSize;j++){
-                if(squersShotedByComputer.includes(j)){
-                    break;
-                }else{
-                    tablica.push((i*10)+j+k)
-                }
-            }
-            whereCanBePlacedBiggestShip.push(tablica)
-            tablica = []
-        }  
-    }
-
 }
-console.log(whereCanBePlacedBiggestShip)
-}*/
+}
+    for( k = 0;k <sizeY;k++){
+        tutaj:
+        for( i = 0; i<sizeX-biggestShipSize+1;i++){
+            for( j = 0; j<biggestShipSize;j++){
+                if(squersShotedByComputer.includes((i*10)+(j*10)+k)){
+                    continue tutaj;
+                }else{
+                    tablica.push((i*10)+(j*10)+k)
+            }
+            
+        }
+        whereCanBePlacedBiggestShip.push(tablica)
+        tablica = []  
+        
+    }
+    }  
+}
