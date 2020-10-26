@@ -13,7 +13,6 @@ var mouseClickHandler = function(event) {
         if(selectedShipDirection==0){
             position = checkIsSizeSuitable(position, selectedShipDirection)
             checkCanBePlaced(position, 1)
-            console.log(canBePlaced)
             if(canBePlaced){   
                 shipManager(selectedShipSize, position, selectedShipDirection, "usedPlayerSquers")
                 //tworzymy tablice do ktorej zapisujemy divy skladajace sie na statek zeby potem mozna bylo go usunac z mapy => patrz else tego ifa

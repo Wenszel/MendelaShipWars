@@ -7,6 +7,7 @@ var winner = null
 var winChecker = (playground, squersShoted) => playground.every(i => squersShoted.includes(i))
 var sunkCkecker = (ship, squersShoted) => ship.every(i => squersShoted.includes(i))
 function startGame(){
+    //checkWhereCanBeBiggestShip()
     //usuniecie wszystkich listenerow
     playerPlaygroundTable.forEach(function(squer){
         squer.style.cursor="none"
@@ -29,10 +30,7 @@ function startGame(){
                 }else{
                     this.style.backgroundImage = "url(images/dot.png)";
                     playerTurn=false
-                    
-                    setTimeout(computerShot, 1000)
-                    
-                    
+                    setTimeout(computerShot, 1000) 
                 }
                 if(winChecker(computerShipsCordinates.flat(),squersShotedByPlayer)){
                     setTimeout(function(){alert("Wygrałeś")
@@ -62,6 +60,7 @@ function checkIsSunk(position, player){
         }
     }else{
         var ship = playerShipsCordinates.find(i => i.includes(position))
+  
         if(sunkCkecker(ship,squersShotedByComputer)){
             var shootedShipSize = 0
             ship.forEach(function(i){
@@ -69,14 +68,16 @@ function checkIsSunk(position, player){
                 shootedShipSize+=1
             })
             var shootedShipPosition = ship[0]
-            var shootedShipDiretion 
+            var shootedShipDirection
+     
                 //kierunek generowanego statku okreslamy na podstawie tego czy o 10 pozycji na planszy jest ten sam squer co w drugim elemencie tablicy ship
-                if(playerPlaygroundTable.indexOf(ship[0])+10==playerPlaygroundTable.indexOf(ship[1])){
-                    shootedShipDiretion=1
+                if(ship[0]+10==ship[1]){
+                    shootedShipDirection=1
                 }else{
-                    shootedShipDiretion=0
+                    shootedShipDirection=0
                 }
-                shipManager(shootedShipSize,shootedShipPosition, shootedShipDiretion, "squersShooted")
+           
+                shipManager(shootedShipSize,shootedShipPosition, shootedShipDirection, "squersShooted")
 
                 directionOfShootingCounter=0
                 isLastShootedShipSunked=true
@@ -102,7 +103,7 @@ function reloadGame(){
 var isLastShootedShipSunked = true
 var lastShootedPosition 
 var firstShootedPosition 
-var shootedShipDirection
+
 var directionOfShooting = [1,-1,10,-10]
 
 var directionOfShootingCounter = 0
@@ -162,3 +163,47 @@ function computerShot(){
 }
 
 }
+/*
+var biggestShipSize = 0
+var whereCanBePlacedBiggestShip = []
+function checkWhereCanBeBiggestShip(){
+    console.log("odpalilo sie")
+    for( i = 0; i<playerShipsCordinates.length;i++){
+        if(biggestShipSize< playerShipsCordinates[i].length){
+            biggestShipSize = playerShipsCordinates[i].length
+            console.log(biggestShipSize)
+        }
+        
+    }
+    var tablica = []
+    for( k = 0;k <sizeY;k++){
+        for( i = 0; i<sizeX-biggestShipSize+1;i++){
+            for( j = 0; j<biggestShipSize;j++){
+                if(squersShotedByComputer.includes(j)){
+                    break;
+                }else{
+                    tablica.push(i+j+(k*10))
+                }
+            }
+            whereCanBePlacedBiggestShip.push(tablica)
+            tablica = []
+            
+    }
+    
+    for( k = 0;k <sizeX;k++){
+        for( i = 0; i<sizeY-biggestShipSize+1;i++){
+            for( j = 0; j<biggestShipSize;j++){
+                if(squersShotedByComputer.includes(j)){
+                    break;
+                }else{
+                    tablica.push((i*10)+j+k)
+                }
+            }
+            whereCanBePlacedBiggestShip.push(tablica)
+            tablica = []
+        }  
+    }
+
+}
+console.log(whereCanBePlacedBiggestShip)
+}*/
