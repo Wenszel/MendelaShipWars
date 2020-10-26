@@ -181,6 +181,7 @@ function checkWhereCanBeBiggestShip(){
         for( i = 0; i<sizeX-biggestShipSize+1;i++){
             for( j = 0; j<biggestShipSize;j++){
                 if(squersShotedByComputer.includes(i+j+(k*10))){
+                    tablica = []
                     continue tutaj;
                 }else{
                     tablica.push(i+j+(k*10))
@@ -198,6 +199,7 @@ function checkWhereCanBeBiggestShip(){
         for( i = 0; i<sizeX-biggestShipSize+1;i++){
             for( j = 0; j<biggestShipSize;j++){
                 if(squersShotedByComputer.includes((i*10)+(j*10)+k)){
+                    tablica = []
                     continue tutaj;
                 }else{
                     tablica.push((i*10)+(j*10)+k)
