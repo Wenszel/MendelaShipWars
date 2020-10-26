@@ -19,7 +19,6 @@ function startGame(){
         squer.addEventListener("click",function(event){
             if(playerTurn){
                 var position = computerPlaygroundTable.findIndex(e => e==event.target)
-                console.log(position)
                 if(squersShotedByPlayer.includes(position)){
                     alert("Tu juz strzelales")
                 }
@@ -36,7 +35,9 @@ function startGame(){
                     
                 }
                 if(winChecker(computerShipsCordinates.flat(),squersShotedByPlayer)){
-                    setTimeout(function(){alert("Wygrałeś")},500)
+                    setTimeout(function(){alert("Wygrałeś")
+                    reloadGame()
+                    },500)
                 }
                 
             }else{
@@ -51,36 +52,6 @@ function startGame(){
     document.getElementById("startGame").style.visibility="hidden"
     
 }
-//TODO: algorytm dobijania statkow
-//TODO: algorytm szukajacy najwiekszego statku na mapie
-function computerShot(){    
-    do{
-        var position = Math.floor(Math.random() * (sizeX*sizeY))
-    }while(squersShotedByComputer.includes(position))
-        squersShotedByComputer.push(position)
-        if(playerShipsCordinates.flat().includes(position)){
-            playerPlaygroundTable[position].style.backgroundImage = "url(images/cross.png)";
-            if(winChecker(playerShipsCordinates.flat(),squersShotedByComputer)){
-                var revange = confirm("Przegrałeś :( Rewanz?")
-                if (revange){
-                    isGeneratedPlayerPlayground = false
-                    isGeneratedComputerPlayground = false
-                    document.getElementById("playerPlayground").removeChild
-                    document.getElementById("computerPlayground").removeChild
-                    generatePlayerPlayground()
-                    generateComputerPlayground()
-                }
-                
-            }else{
-                checkIsSunk(position, 1)
-                setTimeout(computerShot,1000)
-            }
-        }else{
-            playerPlaygroundTable[position].style.backgroundImage = "url(images/dot.png)";
-            playerTurn=true
-}
-
-}
 function checkIsSunk(position, player){
     if(player == 0){
         var ship = computerShipsCordinates.find(i => i.includes(position))
@@ -91,7 +62,6 @@ function checkIsSunk(position, player){
         }
     }else{
         var ship = playerShipsCordinates.find(i => i.includes(position))
-        console.log("pozycja statku zatopionego"+ship+" "+ship[0])
         if(sunkCkecker(ship,squersShotedByComputer)){
             var shootedShipSize = 0
             ship.forEach(function(i){
@@ -107,7 +77,88 @@ function checkIsSunk(position, player){
                     shootedShipDiretion=0
                 }
                 shipManager(shootedShipSize,shootedShipPosition, shootedShipDiretion, "squersShooted")
-            //TODO: mozna dodac do shotedByComputer punkty wokol statku => ten durny dlugi algorytm dodany po raz kolejny XD
+
+                directionOfShootingCounter=0
+                isLastShootedShipSunked=true
+                return true
+        }else{
+                isLastShootedShipSunked=false
+                return false
         }
     }
+}
+function reloadGame(){
+    squersShotedByPlayer = []
+    squersShotedByComputer = []
+    computerShipsCordinates = [] 
+    playerShipsCordinates = []
+    playerTurn = true
+    winner = null
+    document.getElementById("playerPlayground").innerHTML = "<h1>PLAYER</h1>"
+    document.getElementById("computerPlayground").innerHTML = "<h1>COMPUTER</h1>"
+    generatePlayerPlayground()
+    generateComputerPlayground()
+}
+var isLastShootedShipSunked = true
+var lastShootedPosition 
+var firstShootedPosition 
+var shootedShipDirection
+var directionOfShooting = [1,-1,10,-10]
+
+var directionOfShootingCounter = 0
+function isShootingSuitable(position){
+    if(position<0||position>99){
+        directionOfShootingCounter++
+        return false
+    }
+    else if(((position-(position%10)<firstShootedPosition-(firstShootedPosition%10))||(position-(position%10)>firstShootedPosition-(firstShootedPosition%10)))
+    &&(directionOfShootingCounter==0||directionOfShootingCounter==1)){
+        directionOfShootingCounter++
+        return false
+    }else{
+        return true
+    }
+}
+function computerShot(){    
+    //w tej petli rozgrywa sie algorytm dobijania
+    var position
+    
+    do{
+        if(isLastShootedShipSunked){
+            position = generatePosition()  
+            lastShootedPosition = position
+            firstShootedPosition = position
+        }else{
+            position = lastShootedPosition+directionOfShooting[directionOfShootingCounter]
+            while(!isShootingSuitable(position)){
+                position = lastShootedPosition+directionOfShooting[directionOfShootingCounter]
+            }
+            lastShootedPosition = position
+            if(playerShipsCordinates.flat().includes(position)){
+                
+            }else{
+                directionOfShootingCounter++
+                lastShootedPosition=firstShootedPosition
+            }
+        }
+    }while(squersShotedByComputer.includes(position))
+        squersShotedByComputer.push(position)
+        if(playerShipsCordinates.flat().includes(position)){
+            playerPlaygroundTable[position].style.backgroundImage = "url(images/cross.png)";
+            checkIsSunk(position, 1)
+            if(winChecker(playerShipsCordinates.flat(),squersShotedByComputer)){
+                setTimeout(function(){
+
+                
+                var revange = confirm("Przegrałeś :( Rewanz?")
+                if (revange) reloadGame() 
+            },500)   
+            }else{
+                setTimeout(computerShot,1000)
+            }
+        }else{
+            playerPlaygroundTable[position].style.backgroundImage = "url(images/dot.png)";
+            playerTurn=true
+}
+
 }

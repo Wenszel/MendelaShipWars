@@ -7,15 +7,14 @@ var playerPlayground = document.getElementById("playerPlayground")
 var playerPlaygroundTable = []
 var usedPlayerPlaygroundSquers = []
 var canBePlaced = true
-var isGeneratedPlayerPlayground = false
-//TODO: dla dwójki na ostatnim rzedzie cos sie zacielo
 var mouseClickHandler = function(event) {
     var position = playerPlaygroundTable.findIndex(e => e==event.target)
     if(selectedShip!=null){
         if(selectedShipDirection==0){
+            position = checkIsSizeSuitable(position, selectedShipDirection)
             checkCanBePlaced(position, 1)
+            console.log(canBePlaced)
             if(canBePlaced){   
-                position = checkIsSizeSuitable(position, selectedShipDirection)
                 shipManager(selectedShipSize, position, selectedShipDirection, "usedPlayerSquers")
                 //tworzymy tablice do ktorej zapisujemy divy skladajace sie na statek zeby potem mozna bylo go usunac z mapy => patrz else tego ifa
                 var tablica = []
@@ -28,9 +27,9 @@ var mouseClickHandler = function(event) {
                 changeColorOfShipsToblue()
             }
         }else{
+            position = checkIsSizeSuitable(position, selectedShipDirection) 
             checkCanBePlaced(position, 10)
             if(canBePlaced){
-                position = checkIsSizeSuitable(position, selectedShipDirection)   
                 shipManager(selectedShipSize, position, selectedShipDirection, "usedPlayerSquers")
                 var tablica = []
                 for (i = 0; i<selectedShipSize;i++){
@@ -65,7 +64,7 @@ var mouseClickHandler = function(event) {
                 }
                 var generatedShipSize = counter
                 //funkcja usuwajace usedSquery
-                shipManager(generatedShipPosition, generatedShipSize,generatedShipDiretion, "releasePlayerSquers")
+                shipManager(generatedShipSize,generatedShipPosition,generatedShipDiretion, "releasePlayerSquers")
                 //usuwa ze shipsOnPlayground wybrany statek
                 shipsOnPlayground.splice(shipsOnPlayground.indexOf(ship),1)
             }
@@ -80,10 +79,11 @@ if(shipsOnPlayground.length==10){
                     
 }  
 function generatePlayerPlayground(){
-    //wygeneruj tylko jezeli nie zostalo jeszcze wygenerowane
-    if(isGeneratedPlayerPlayground == false){
-        
         //wygeneruj plansze
+        shipsTable = []
+        shipsOnPlayground = []
+        playerPlaygroundTable = []
+        usedPlayerPlaygroundSquers = []
         for(i = 0; i<sizeX; i++){
             for(j= 0;j<sizeY;j++){
                 //dodajemy kwadraty na planszy
@@ -197,8 +197,7 @@ function generatePlayerPlayground(){
     selectedShip = shipsTable[0]
     selectedShipSize=4
     selectedShip.style.backgroundColor="blue"
-    isGeneratedPlayerPlayground = true
-}
+
 
 }
 //funkcja ktora generuje menu statkow obok planszy

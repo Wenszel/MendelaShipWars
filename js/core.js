@@ -23,9 +23,15 @@ function shipManager(shipSize, position, direction, task){
             playerShipsCordinates.push(tablica)
         }else if( zadanie == "usedComputerSquers"){
             computerShipsCordinates.push(tablica)
-        }
-        for(i = 0; i<shipSize;i++){
-            task(position+i)
+        }else if(zadanie =="releasePlayerSquers"){
+            //TODO:   bot ktory sprawdza w ktorych miejscach na mapie znajdzie sie statek
+            for(var i=0;i<playerShipsCordinates.length;i++){
+                if (tablica[0] == playerShipsCordinates[i][0] ){
+                    console.log(playerShipsCordinates[i][0])
+                    var index = i
+                }
+            }
+            playerShipsCordinates.splice(index,1)
         }
         if(position%100<10){
             if(position%10==0){
