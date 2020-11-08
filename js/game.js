@@ -37,7 +37,7 @@ function startGame(){
                     reloadGame()
                     },500)
                 }
-                }
+				}
             }else{
                 alert("Ruch Komputera")
             }
@@ -131,7 +131,10 @@ function computerShot(){
             firstShootedPosition = position
             }while(!whereCanBePlacedBiggestShip.flat().includes(position))
         }else{
+//TODO: tutaj jescze mozna to przepuscic przez where can be placed i wtedy nie bedzie takiej sytuacji ze bedzie probowalo dobic w miescu w ktorym sie juz nie zmiesci
+            
             position = lastShootedPosition+directionOfShooting[directionOfShootingCounter]
+            
             while(!isShootingSuitable(position)){
                 position = lastShootedPosition+directionOfShooting[directionOfShootingCounter]
             }
@@ -175,7 +178,7 @@ function checkWhereCanBeBiggestShip(){
     }
     biggestShipSize = Math.max.apply(Math, shipSizeTable)
     var tablica = []
-    if(biggestShipSize!=1){
+  
     for( k = 0;k <sizeY;k++){
         tutaj:
         for( i = 0; i<sizeX-biggestShipSize+1;i++){
@@ -193,7 +196,7 @@ function checkWhereCanBeBiggestShip(){
             
     }
 }
-}
+
     for( k = 0;k <sizeY;k++){
         tutaj:
         for( i = 0; i<sizeX-biggestShipSize+1;i++){
