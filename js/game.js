@@ -126,17 +126,17 @@ function computerShot(){
     do{
         if(isLastShootedShipSunked){
             do{
-			a = whereCanBePlacedBiggestShip.flat()
+            //algorytm zwracający pozycje która najczesciej wystąpila w mozliwych ulozeniach statku
+			listOfPlaces = whereCanBePlacedBiggestShip.flat()
 			b={}
 			max=0, maxi=0;
 			
-			for(let k of a) {
+			for(let k of listOfPlaces) {
 				if(b[k]) b[k]++; else b[k]=1;
 				if(maxi < b[k]) { 
 					max=k; maxi=b[k] 
 				}
 			}
-			console.log(max)
             position = max
             lastShootedPosition = position
             firstShootedPosition = position
@@ -188,12 +188,12 @@ function checkWhereCanBeBiggestShip(){
     var tablica = []
     if(biggestShipSize!=1){
     for( k = 0;k <sizeY;k++){
-        tutaj:
+        repeatLoop:
         for( i = 0; i<sizeX-biggestShipSize+1;i++){
             for( j = 0; j<biggestShipSize;j++){
                 if(squersShotedByComputer.includes(i+j+(k*10))){
                     tablica = []
-                    continue tutaj;
+                    continue repeatLoop;
                 }else{
                     tablica.push(i+j+(k*10))
                 }
@@ -206,12 +206,12 @@ function checkWhereCanBeBiggestShip(){
 }
 }
     for( k = 0;k <sizeY;k++){
-        tutaj:
+        repeatLoop:
         for( i = 0; i<sizeX-biggestShipSize+1;i++){
             for( j = 0; j<biggestShipSize;j++){
                 if(squersShotedByComputer.includes((i*10)+(j*10)+k)){
                     tablica = []
-                    continue tutaj;
+                    continue repeatLoop;
                 }else{
                     tablica.push((i*10)+(j*10)+k)
             }
