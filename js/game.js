@@ -22,7 +22,7 @@ function startGame(){
                 var position = computerPlaygroundTable.findIndex(e => e==event.target)
                 if(squersShotedByPlayer.includes(position)){
                     alert("Tu juz strzelales")
-                }
+                }else{
                 squersShotedByPlayer.push(position)
                 if(computerShipsCordinates.flat().includes(position)){
                     this.style.backgroundImage="url(images/cross.png)";
@@ -37,7 +37,7 @@ function startGame(){
                     reloadGame()
                     },500)
                 }
-                
+                }
             }else{
                 alert("Ruch Komputera")
             }
