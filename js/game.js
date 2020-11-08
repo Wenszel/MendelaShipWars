@@ -79,9 +79,11 @@ function checkIsSunk(position, player){
                 shipManager(shootedShipSize,shootedShipPosition, shootedShipDirection, "squersShooted")
                 playerShipsCordinates.splice(playerShipsCordinates.findIndex( i => i.includes(ship[0])),1)
                 directionOfShootingCounter=0
+               
                 isLastShootedShipSunked=true
                 return true
         }else{
+                
                 isLastShootedShipSunked=false
                 return false
         }
@@ -106,26 +108,14 @@ var firstShootedPosition
 var directionOfShooting = [1,-1,10,-10]
 
 var directionOfShootingCounter = 0
-function isShootingSuitable(position){
-    if(position<0||position>99){
-        directionOfShootingCounter++
-        return false
-    }
-    else if(((position-(position%10)<firstShootedPosition-(firstShootedPosition%10))||(position-(position%10)>firstShootedPosition-(firstShootedPosition%10)))
-    &&(directionOfShootingCounter==0||directionOfShootingCounter==1)){
-        directionOfShootingCounter++
-        return false
-    }else{
-        return true
-    }
-}
 function computerShot(){    
     //w tej petli rozgrywa sie algorytm dobijania
     var position
     
-    do{
+    
         if(isLastShootedShipSunked){
             do{
+            checkWhereCanBeBiggestShip()
             //algorytm zwracający pozycje która najczesciej wystąpila w mozliwych ulozeniach statku
 			listOfPlaces = whereCanBePlacedBiggestShip.flat()
 			b={}
@@ -143,20 +133,25 @@ function computerShot(){
             }while(!whereCanBePlacedBiggestShip.flat().includes(position))
         }else{
             position = lastShootedPosition+directionOfShooting[directionOfShootingCounter]
-            while(!isShootingSuitable(position)){
-                position = lastShootedPosition+directionOfShooting[directionOfShootingCounter]
-            }
+            canBePlaced=false
+            while(!canBePlaced){
+                whereCanBePlacedBiggestShip.forEach(function(x){ 
+                    if((x.includes(firstShootedPosition))&&(x.includes(position))){
+                        canBePlaced=true
+                    }
+                })
+                if(!canBePlaced){
+                    directionOfShootingCounter++
+                    position = firstShootedPosition+directionOfShooting[directionOfShootingCounter]
+                }
+            } 
             lastShootedPosition = position
-            if(playerShipsCordinates.flat().includes(position)){
-                
-            }else{
+            if(!playerShipsCordinates.flat().includes(position)){
                 directionOfShootingCounter++
                 lastShootedPosition=firstShootedPosition
             }
         }
-    }while(squersShotedByComputer.includes(position))
         squersShotedByComputer.push(position)
-        checkWhereCanBeBiggestShip()
         if(playerShipsCordinates.flat().includes(position)){
             playerPlaygroundTable[position].style.backgroundImage = "url(images/cross.png)";
             checkIsSunk(position, 1)
