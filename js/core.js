@@ -125,7 +125,8 @@ function shipManager(shipSize, position, direction, task){
         }else if(zadanie == "usedComputerSquers"){
             computerShipsCordinates.push(tablica)
             //odkomentuj do zmiany statkow przeciwnika na widoczny kolor
-            /*tablica.forEach(function(i){
+            /*
+            tablica.forEach(function(i){
                 computerPlaygroundTable[i].style.backgroundColor = "white"
             })*/
         }
@@ -133,9 +134,7 @@ function shipManager(shipSize, position, direction, task){
             //TODO:   bot ktory sprawdza w ktorych miejscach na mapie znajdzie sie statek
             for(var i=0;i<playerShipsCordinates.length;i++){
                 if (tablica[0] == playerShipsCordinates[i][0] ){
-                    console.log(playerShipsCordinates[i][0])
                     var index = i
-                    console.log(index)
                 }
             }
             playerShipsCordinates.splice(index,1)
