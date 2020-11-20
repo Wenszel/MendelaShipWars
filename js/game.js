@@ -168,8 +168,10 @@ function computerShot(){
             playerPlaygroundTable[position].style.backgroundImage = "url(images/cross.png)";
             checkIsSunk(position, 1)
             if(winChecker(playerShipsCordinates.flat(),squersShotedByComputer)){
+				colorComputerShips()
                 setTimeout(function(){
-                var revange = confirm("Przegrałeś :( Rewanz?")
+					
+					var revange = confirm("Przegrałeś :( Rewanz?")
                 if (revange) reloadGame() 
             },500)   
             }else{
@@ -236,7 +238,7 @@ function checkWhereCanBeBiggestShip(){
 function colorComputerShips(){
     computerShipsCordinates.forEach(function(i){
         i.forEach(function(j){
-            computerPlaygroundTable[j].style.backgroundColor="white"
+            computerPlaygroundTable[j].style.backgroundColor="red"
         })
     })
 }
