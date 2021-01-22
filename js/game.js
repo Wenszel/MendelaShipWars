@@ -134,16 +134,18 @@ function computerShot(){
         if(isLastShootedShipSunked){
             listOfPlaces = whereCanBePlacedBiggestShip.flat()
 			b={}
-			max=0, maxi=0;
-			
-
+			max=[], maxi=0;
 			for(let k of listOfPlaces) {
 				if(b[k]) b[k]++; else b[k]=1;
-				if(maxi < b[k]) { 
-					max=k; maxi=b[k] 
-				}
+				if(maxi < b[k]) {
+                    max=[]; 
+                    max.push(k); 
+                    maxi=b[k];
+				}else if(maxi==b[k]){
+                    max.push(k);
+                }
             }
-            position = max
+            position = max[Math.floor(Math.random()*max.length)];
 		if(biggestShipSize==1){
 			position = generatePosition()
 		}
